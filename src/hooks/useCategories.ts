@@ -3,7 +3,7 @@ import { api } from "../services/api";
 
 export const useCategories = () => {
   const queryClient = useQueryClient();
-  const { data: categories, isLoading } = useQuery({
+  const { data: categories, isLoading, error, refetch } = useQuery({
     queryKey: ["categories"],
     queryFn: async () => (await api.get("/category")).data,
   });
@@ -13,5 +13,5 @@ export const useCategories = () => {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["categories"] }),
   });
 
-  return { categories, isLoading, create };
+  return { categories, isLoading, error, refetch, create };
 };
