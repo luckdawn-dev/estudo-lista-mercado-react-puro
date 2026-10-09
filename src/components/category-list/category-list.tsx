@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import iconAddCategory from '../../assets/icon-add-category.svg'
 import { CategoryComponent } from "../category-component/category-component";
 import type { ICategory } from "../../shared/models/category.model";
-import axios from "axios";
+import { api } from "../../services/api";
 
 
 export function CategoryList() {
@@ -15,7 +15,7 @@ export function CategoryList() {
     useEffect(() => {
         setIsLoading(true);
         setError(null);
-        axios.get('http://localhost:3000/category/')
+        api.get('/category')
             .then(res => {
                 setCategoryList(res.data);
                 setIsLoading(false);
@@ -31,7 +31,7 @@ export function CategoryList() {
 
         if (!categoryField.trim()) return;
 
-        axios.post<ICategory>('http://localhost:3000/category/', { name: categoryField })
+        api.post('/category', { name: categoryField })
             .then(addedCategory => {
                 setCategoryList((list) => [...list, addedCategory.data])
             });
@@ -40,7 +40,7 @@ export function CategoryList() {
     }
 
     function removeCategoryFromList(updatedCategoryId: string) {
-        axios.delete(`http://localhost:3000/category/${updatedCategoryId}`)
+        api.delete(`/category/${updatedCategoryId}`)
 
         setCategoryList(prev =>
             prev.filter(category => category.id !== updatedCategoryId)
@@ -48,7 +48,7 @@ export function CategoryList() {
     }
 
     function editCategoryName(updatedCategory: ICategory) {
-        axios.put(`http://localhost:3000/category/${updatedCategory.id}`, { name: updatedCategory.name })
+        api.put(`/category/${updatedCategory.id}`, { name: updatedCategory.name })
 
         setCategoryList(prev =>
             prev.map(category => (category.id === updatedCategory.id ? updatedCategory : category))
