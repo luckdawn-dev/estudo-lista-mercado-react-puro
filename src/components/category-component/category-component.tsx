@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
 import { useCategoryItems } from "../../hooks/useCategoryItems";
 import { DeleteConfirmDialog } from "./DeleteConfirmDialog";
-import type { IItem } from "../../shared/models/item.model";
 import { ItemListComponent } from "../item-list/item-list";
 import { ShopFormField } from "../shop-form-field/shop-form-field";
 import type { ICategory } from "../../shared/models/category.model";
 import editCategoryIcon from '../../assets/pencil-solid-full.svg';
 import removeCategoryIcon from '../../assets/icon-remove.svg';
 import './category-component.css';
-import { api } from "../../services/api";
 
 
 type CategoryComponentProps = {
