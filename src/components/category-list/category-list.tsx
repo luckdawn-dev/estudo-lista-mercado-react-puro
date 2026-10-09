@@ -9,11 +9,21 @@ export function CategoryList() {
 
     const [categoryField, setCategoryField] = useState('');
     const [categoryList, setCategoryList] = useState<ICategory[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        axios.get('http://localhost:3000/category/').then(res => {
-            setCategoryList(res.data);
-        })
+        setIsLoading(true);
+        setError(null);
+        axios.get('http://localhost:3000/category/')
+            .then(res => {
+                setCategoryList(res.data);
+                setIsLoading(false);
+            })
+            .catch(err => {
+                setError(err.message || 'Failed to load categories');
+                setIsLoading(false);
+            });
     }, [])
 
     function addCategoryToList(event: React.SubmitEvent<HTMLFormElement>) {
