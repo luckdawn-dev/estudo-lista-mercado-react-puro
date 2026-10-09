@@ -58,6 +58,8 @@ export function CategoryList() {
     return (
         <div>
             <h1>Categorias</h1>
+            {isLoading && <p>Carregando...</p>}
+            {error && <p style={{ color: 'red' }}>{error}</p>}
 
             <form onSubmit={addCategoryToList}>
                 <input autoComplete="off" autoCorrect="off" name='categoryName' onChange={(e) => setCategoryField(e.target.value)} value={categoryField} type="text" placeholder="Nome da categoria aqui" />

@@ -16,7 +16,7 @@ type CategoryComponentProps = {
 };
 
 export function CategoryComponent({ category, onEditCategory, removeCategoryFromList }: CategoryComponentProps) {
-    const { items: itemList, loading, error, addItem, removeItem } = useCategoryItems(category.id);
+    const { items: itemList, addItem, removeItem } = useCategoryItems(category.id);
     const [categoryEditField, setCategoryEditField] = useState('');
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
