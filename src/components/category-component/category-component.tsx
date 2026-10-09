@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
+import { useCategoryItems } from "../../hooks/useCategoryItems";
+import { DeleteConfirmDialog } from "./DeleteConfirmDialog";
 import type { IItem } from "../../shared/models/item.model";
 import { ItemListComponent } from "../item-list/item-list";
 import { ShopFormField } from "../shop-form-field/shop-form-field";
@@ -7,7 +8,7 @@ import type { ICategory } from "../../shared/models/category.model";
 import editCategoryIcon from '../../assets/pencil-solid-full.svg';
 import removeCategoryIcon from '../../assets/icon-remove.svg';
 import './category-component.css';
-import axios from "axios";
+import { api } from "../../services/api";
 
 
 type CategoryComponentProps = {
@@ -17,15 +18,10 @@ type CategoryComponentProps = {
 };
 
 export function CategoryComponent({ category, onEditCategory, removeCategoryFromList }: CategoryComponentProps) {
-    const [itemList, setItemList] = useState<IItem[]>([]);
+    const { items: itemList, loading, error, addItem, removeItem } = useCategoryItems(category.id);
     const [categoryEditField, setCategoryEditField] = useState('');
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
-
-    useEffect(() => {
-        axios.get(`http://localhost:3000/shopItem/${category.id}`)
-            .then((response) => {setItemList(() => response.data || [])})
-    }, [category.id])
 
     const itemCount = itemList.length;
     const deletionWarning =
@@ -56,17 +52,12 @@ export function CategoryComponent({ category, onEditCategory, removeCategoryFrom
         setIsEditing(false);
     }
 
-    function addItemToList(itemName: string, quantity?: number) {
-        axios.post(`http://localhost:3000/shopItem/`, {
-            name: itemName,
-            categoryId: category.id
-        })
-        setItemList(prev => [...prev, { id: crypto.randomUUID(), name: itemName, quantity: quantity }])
+    async function addItemToList(itemName: string, quantity?: number) {
+        await addItem(itemName, quantity);
     }
 
     function removeItemFromList(itemRemovalId: string) {
-        axios.delete(`http://localhost:3000/shopItem/${itemRemovalId}`)
-        setItemList(itemList => itemList.filter(prev => prev.id !== itemRemovalId));
+        removeItem(itemRemovalId);
     }
 
     function openDeleteDialog() {
@@ -137,36 +128,12 @@ export function CategoryComponent({ category, onEditCategory, removeCategoryFrom
 
             <ItemListComponent itemList={itemList} onRemoveItem={removeItemFromList}></ItemListComponent>
 
-            {
-                isDeleteDialogOpen && createPortal(
-                    <div className="confirm-overlay" onClick={closeDeleteDialog}>
-                        <div
-                            className="confirm-dialog"
-                            role="alertdialog"
-                            aria-modal="true"
-                            aria-label="Confirmar deleção da categoria"
-                            onClick={(event) => event.stopPropagation()}
-                        >
-                            <div className="confirm-dialog-icon">🗑️</div>
-                            <h2>Deletar categoria?</h2>
-                            <p>
-                                Tem certeza que deseja deletar <strong>{category.name}</strong>?
-                                {' '}
-                                {deletionWarning}
-                            </p>
-                            <div className="confirm-dialog-actions">
-                                <button type="button" className="cancel-button" autoFocus onClick={closeDeleteDialog}>
-                                    Cancelar
-                                </button>
-                                <button type="button" className="delete-confirm-button" onClick={confirmDeleteCategory}>
-                                    Deletar
-                                </button>
-                            </div>
-                        </div>
-                    </div>,
-                    document.body
-                )
-            }
+            <DeleteConfirmDialog
+                open={isDeleteDialogOpen}
+                warningText={deletionWarning}
+                onConfirm={confirmDeleteCategory}
+                onCancel={closeDeleteDialog}
+            />
         </div>
     )
 }
