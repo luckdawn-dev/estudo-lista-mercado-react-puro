@@ -1,0 +1,362 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+/* ================= Reset & base ================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+button img {
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+body {
+  min-height: 100vh;
+  padding: 40px 20px 64px;
+  font-family: 'Nunito', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background:
+    radial-gradient(circle at 10% 15%, rgba(255, 255, 255, 0.18), transparent 40%),
+    radial-gradient(circle at 90% 82%, rgba(255, 255, 255, 0.12), transparent 45%),
+    linear-gradient(135deg, #0ba360 0%, #3cba92 100%);
+  color: #1f2937;
+}
+
+#root {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1120px;
+}
+
+/* ================= Grid de categorias ================= */
+#root > div {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 22px;
+  align-items: start;
+}
+
+/* Eyebrow, título e formulário de categoria ocupam a largura toda */
+#root > div::before,
+#root > div > h1,
+#root > div > form {
+  grid-column: 1 / -1;
+}
+
+/* Etiqueta superior (feita só em CSS) */
+#root > div::before {
+  content: '🛒 Mercadinho do Zé';
+  display: block;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-shadow: 0 1px 6px rgba(6, 78, 45, 0.3);
+  margin-bottom: 4px;
+}
+
+#root > div > h1 {
+  color: #ffffff;
+  font-size: clamp(2rem, 4.5vw, 2.9rem);
+  font-weight: 900;
+  text-shadow: 0 3px 14px rgba(6, 78, 45, 0.35);
+}
+
+/* ================= Formulário de nova categoria ================= */
+#root > div > form {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.96);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  padding: 14px 16px;
+  border-radius: 18px;
+  box-shadow: 0 16px 32px rgba(7, 70, 42, 0.18);
+}
+
+#root > div > form input {
+  flex: 1;
+  min-width: 0;
+  padding: 13px 16px;
+  font: inherit;
+  font-weight: 600;
+  color: #1f2937;
+  background: #f2f8f4;
+  border: 2px solid transparent;
+  border-radius: 13px;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+#root > div > form input::placeholder {
+  color: #9db3a6;
+  font-weight: 500;
+}
+
+#root > div > form input:focus {
+  outline: none;
+  background: #ffffff;
+  border-color: #22c55e;
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.16);
+}
+
+#root > div > form button[type='submit'] {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(22, 101, 52, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#root > div > form button[type='submit'] img {
+  width: 26px;
+  height: 26px;
+  display: block;
+  filter: brightness(0) invert(1);
+  /* ícone preto -> branco */
+}
+
+#root > div > form button[type='submit']:hover {
+  transform: scale(1.08) rotate(8deg);
+  box-shadow: 0 10px 20px rgba(22, 101, 52, 0.42);
+}
+
+#root > div > form button[type='submit']:active {
+  transform: scale(0.94);
+}
+
+/* ================= Cartões de categoria (os quadradinhos) ================= */
+#root > div > div {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 18px 36px rgba(7, 70, 42, 0.16), 0 2px 6px rgba(7, 70, 42, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: rise 0.35s ease both;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#root > div > div:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 24px 44px rgba(7, 70, 42, 0.2), 0 2px 6px rgba(7, 70, 42, 0.06);
+}
+
+/* Entrada escalonada dos cartões */
+#root > div > div:nth-child(3) { animation-delay: 0.05s; }
+#root > div > div:nth-child(4) { animation-delay: 0.1s; }
+#root > div > div:nth-child(5) { animation-delay: 0.15s; }
+#root > div > div:nth-child(6) { animation-delay: 0.2s; }
+#root > div > div:nth-child(7) { animation-delay: 0.25s; }
+#root > div > div:nth-child(8) { animation-delay: 0.3s; }
+#root > div > div:nth-child(9) { animation-delay: 0.35s; }
+#root > div > div:nth-child(10) { animation-delay: 0.4s; }
+
+/* Estado vazio de categorias (só em CSS) */
+#root > div:not(:has(> div))::after {
+  content: '🏷️ Nenhuma categoria ainda… Crie a primeira acima!';
+  grid-column: 1 / -1;
+  display: block;
+  text-align: center;
+  padding: 44px 20px;
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.12);
+  border: 2px dashed rgba(255, 255, 255, 0.45);
+  border-radius: 20px;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+/* ================= Formulário de item dentro do cartão ================= */
+.item-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.item-input {
+  flex: 1;
+  min-width: 0;
+  padding: 11px 14px;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1f2937;
+  background: #f2f8f4;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.item-input::placeholder {
+  color: #9db3a6;
+  font-weight: 500;
+}
+
+.item-input:focus {
+  outline: none;
+  background: #ffffff;
+  border-color: #22c55e;
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.16);
+}
+
+.item-submit-button {
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  line-height: 0;
+  transition: transform 0.2s ease;
+}
+
+.item-submit-button img {
+  width: 40px;
+  height: 40px;
+  display: block;
+}
+
+.item-submit-button:hover {
+  transform: scale(1.1) rotate(8deg);
+}
+
+.item-submit-button:active {
+  transform: scale(0.92);
+}
+
+/* ================= Lista de itens ================= */
+#root ol {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  counter-reset: item-counter;
+}
+
+#root li {
+  counter-increment: item-counter;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: item-in 0.25s ease both;
+}
+
+/* Badge numerado (estilo checklist) */
+#root li::before {
+  content: counter(item-counter);
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  box-shadow: 0 3px 8px rgba(34, 197, 94, 0.3);
+}
+
+/* Estado vazio da lista de itens (só em CSS) */
+#root ol:empty::before {
+  content: '🧺 Nenhum item ainda…';
+  display: block;
+  padding: 18px 8px;
+  text-align: center;
+  color: #9db3a6;
+  font-style: italic;
+  font-weight: 600;
+}
+
+/* Acessibilidade */
+#root button:focus-visible {
+  outline: 2px solid #22c55e;
+  outline-offset: 2px;
+}
+
+::selection {
+  background: rgba(34, 197, 94, 0.3);
+}
+
+/* ================= Animações ================= */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes item-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ================= Responsivo ================= */
+@media (max-width: 640px) {
+  body {
+    padding: 24px 12px calc(48px + env(safe-area-inset-bottom, 0px));
+  }
+
+  #root > div {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  /* 16px evita o zoom automático do iOS ao focar um input */
+  #root > div > form input,
+  .item-input,
+  .category-edit-form input {
+    font-size: 16px;
+  }
+
+  #root > div > form button[type='submit'] {
+    width: 52px;
+    height: 52px;
+  }
+
+  .item-submit-button img {
+    width: 44px;
+    height: 44px;
+  }
+
+  .category-header .icon-button {
+    padding: 10px;
+  }
+
+  .category-header .icon-button img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .confirm-dialog {
+    max-width: 100%;
+  }
+}
