@@ -1,30 +1,15 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import iconAddCategory from '../../assets/icon-add-category.svg'
 import { CategoryComponent } from "../category-component/category-component";
 import type { ICategory } from "../../shared/models/category.model";
+import { useCategories } from "../../hooks/useCategories";
 import { api } from "../../services/api";
 
 
 export function CategoryList() {
 
     const [categoryField, setCategoryField] = useState('');
-    const [categoryList, setCategoryList] = useState<ICategory[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        setIsLoading(true);
-        setError(null);
-        api.get('/category')
-            .then(res => {
-                setCategoryList(res.data);
-                setIsLoading(false);
-            })
-            .catch(err => {
-                setError(err.message || 'Failed to load categories');
-                setIsLoading(false);
-            });
-    }, [])
+    const { categories: categoryList, isLoading, error } = useCategories();
 
     function addCategoryToList(event: React.SubmitEvent<HTMLFormElement>) {
         event.preventDefault();
