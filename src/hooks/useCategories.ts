@@ -1,38 +1,49 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
 import { api } from "../services/api";
 import type { ICategory } from "../shared/models/category.model";
 
 export const useCategories = () => {
-  const queryClient = useQueryClient();
-  const { data: categories, isLoading, error, refetch } = useQuery({
-    queryKey: ["categories"],
-    queryFn: async () => {
-      const res = await api.get("/category");
-      return res.data;
-    },
-  });
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const create = useMutation({
-    mutationFn: (name: string) => api.post("/category", { name }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["categories"] });
-    },
-  });
+  useEffect(() => {
+    let cancelled = false;
+    api
+      .get("/category")
+      .then((res) => {
+        if (!cancelled) setCategories(res.data || []);
+      })
+      .catch((err) => {
+        if (!cancelled) setError(err?.message || "Erro ao carregar categorias");
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, []);
 
-  const update = useMutation({
-    mutationFn: (updated: ICategory) =>
-      api.put(`/category/${updated.id}`, { name: updated.name }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["categories"] });
-    },
-  });
+  const create = async (name: string) => {
+    const res = await api.post("/category", { name });
+    const created = res.data;
+    setCategories((prev) => [...prev, created]);
+    return created;
+  };
 
-  const remove = useMutation({
-    mutationFn: (id: string) => api.delete(`/category/${id}`),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["categories"] });
-    },
-  });
+  const update = async (updated: ICategory) => {
+    const res = await api.put(`/category/${updated.id}`, { name: updated.name, id: updated.id });
+    const returned = res.data;
+    setCategories((prev) =>
+      prev.map((cat) => (cat.id === updated.id ? (returned || updated) : cat))
+    );
+    return returned || updated;
+  };
 
-  return { categories, isLoading, error, refetch, create, update, remove };
+  const remove = async (id: string) => {
+    const res = await api.delete(`/category/${id}`);
+    setCategories((prev) => prev.filter((cat) => cat.id !== id));
+    return res.data;
+  };
+
+  return { categories, isLoading, error, create, update, remove };
 };

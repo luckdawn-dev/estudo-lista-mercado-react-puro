@@ -17,7 +17,7 @@ export function CategoryList() {
         if (!trimmed) return;
 
         try {
-            await create.mutateAsync(trimmed);
+            await create(trimmed);
             setCategoryField('');
         } catch (err: any) {
             console.error('Erro ao adicionar categoria:', err);
@@ -27,7 +27,7 @@ export function CategoryList() {
     async function removeCategoryFromList(updatedCategoryId: string) {
         console.log('Removendo categoria ID:', updatedCategoryId);
         try {
-            await remove.mutateAsync(updatedCategoryId);
+            await remove(updatedCategoryId);
             console.log('Categoria removida com sucesso');
         } catch (err: any) {
             console.error('Erro ao remover categoria:', err?.response?.data || err?.message || err);
@@ -37,7 +37,7 @@ export function CategoryList() {
 
     async function editCategoryName(updatedCategory: ICategory) {
         try {
-            await update.mutateAsync(updatedCategory);
+            await update(updatedCategory);
         } catch (err: any) {
             console.error('Erro ao editar categoria:', err);
         }
