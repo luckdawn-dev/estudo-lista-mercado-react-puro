@@ -1,31 +1,26 @@
 .loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 24px;
-  width: fit-content;
-  margin: 32px auto;
-  padding: 48px 36px;
-  border-radius: 24px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.15) inset;
-  background: radial-gradient(circle at 10% 15%, rgba(255,255,255,0.18), transparent 40%),
-              radial-gradient(circle at 90% 82%, rgba(255,255,255,0.12), transparent 45%),
-              linear-gradient(135deg, #0ba360 0%, #3cba92 100%);
+  gap: 28px;
+  background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%);
   color: #fff;
   font-family: 'Nunito', system-ui, sans-serif;
-  padding: 48px 36px;
-  border-radius: 24px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.15) inset;
+  padding: 40px 20px;
 }
 
 .loading-spinner {
-  width: 72px;
-  height: 72px;
-  border: 6px solid rgba(255,255,255,0.25);
-  border-top-color: #fff;
+  width: 80px;
+  height: 80px;
+  border: 8px solid rgba(255,255,255,0.3);
+  border-top-color: #ffffff;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: spin 0.9s linear infinite;
+  box-shadow: 0 0 30px rgba(255,255,255,0.25);
 }
 
 @keyframes spin {
@@ -33,9 +28,8 @@
 }
 
 .loading-text {
-  font-weight: 800;
-  font-size: 1.25rem;
-  letter-spacing: 2px;
-  opacity: 0.95;
+  font-weight: 900;
+  font-size: 1.3rem;
+  letter-spacing: 3px;
   text-shadow: 0 2px 10px rgba(0,0,0,0.15);
 }
