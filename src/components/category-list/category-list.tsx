@@ -45,7 +45,7 @@ export function CategoryList() {
 
     return (
         <div>
-            <h1>Categorias</h1>
+            {!isLoading && <h1>Categorias</h1>}
             {isLoading ? <LoadingScreen /> : (
                 <>
                     {error ? <ErrorPage /> : (
