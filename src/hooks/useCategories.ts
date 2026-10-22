@@ -23,12 +23,12 @@ async function remove(id: string) {
 };
 
 export const useCategories = () => {
-  // o MESMO client do <QueryClientProvider> no main.tsx
   const queryClient = useQueryClient();
 
   const { data: categories, isLoading, error } = useQuery({
     queryKey: ['categories'],
     queryFn: getCategories,
+    initialData: []
   });
 
   const { mutateAsync: createCategory } = useMutation({

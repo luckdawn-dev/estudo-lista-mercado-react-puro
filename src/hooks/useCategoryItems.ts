@@ -17,7 +17,8 @@ export function useCategoryItems(categoryId: string) {
 
   const { data: items, isLoading: loading, error } = useQuery({
     queryKey: ['categoryItems', categoryId],
-    queryFn: () => getCategoryItems(categoryId)
+    queryFn: () => getCategoryItems(categoryId),
+    initialData: []
   })
 
   const { mutateAsync: addItem } = useMutation({
