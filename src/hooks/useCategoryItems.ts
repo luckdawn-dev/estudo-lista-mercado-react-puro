@@ -1,44 +1,34 @@
-import { useState, useEffect, useCallback } from "react";
 import { api } from "../services/api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { IItem } from "../shared/models/item.model";
 
+async function getCategoryItems(categoryId: string) {
+  const res = await api.get(`/shopItem/${categoryId}`);
+  return res.data;
+}
+
+async function remove(id: string) {
+  const res = await api.delete(`/shopItem/${id}`);
+  return res.data;
+};
+
 export function useCategoryItems(categoryId: string) {
-  const [items, setItems] = useState<IItem[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient()
 
-  const fetchItems = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await api.get(`/shopItem/${categoryId}`);
-      setItems(res.data || []);
-    } catch (e: any) {
-      setError(e.message || "Failed to load items");
-    } finally {
-      setLoading(false);
-    }
-  }, [categoryId]);
+  const { data: items, isLoading: loading, error } = useQuery({
+    queryKey: ['categoryItems', categoryId],
+    queryFn: () => getCategoryItems(categoryId)
+  })
 
-  useEffect(() => { fetchItems(); }, [fetchItems]);
+  const { mutateAsync: addItem } = useMutation({
+    mutationFn: (name: string) => api.post("/shopItem", { name, categoryId }).then((res) => res.data),
+    onSuccess: (returned: IItem) => queryClient.setQueryData<IItem[]>(['categoryItems', categoryId], (prev = []) => [...prev, returned])
+  })
 
-  const addItem = async (name: string, quantity?: number) => {
-    try {
-      const res = await api.post("/shopItem/", { name, categoryId, quantity: quantity || 1 });
-      setItems((prev) => [...prev, res.data]);
-    } catch (e: any) {
-      setError(e.message || "Failed to add item");
-    }
-  };
+  const { mutateAsync: removeItem } = useMutation({
+    mutationFn: remove,
+    onSuccess: (_, id) => queryClient.setQueryData<IItem[]>(['categoryItems', categoryId], (prev = []) => prev.filter((i) => i.id !== id))
+  })
 
-  const removeItem = async (itemId: string) => {
-    try {
-      await api.delete(`/shopItem/${itemId}`);
-      setItems((prev) => prev.filter((i) => i.id !== itemId));
-    } catch (e: any) {
-      setError(e.message || "Failed to remove item");
-    }
-  };
-
-  return { items, loading, error, fetchItems, addItem, removeItem };
+  return { items, loading, error, addItem, removeItem };
 }

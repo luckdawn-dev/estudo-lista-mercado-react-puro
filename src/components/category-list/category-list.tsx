@@ -16,31 +16,18 @@ export function CategoryList() {
         const trimmed = categoryField.trim();
         if (!trimmed) return;
 
-        try {
-            await create(trimmed);
-            setCategoryField('');
-        } catch (err: any) {
-            console.error('Erro ao adicionar categoria:', err);
-        }
+        await create(trimmed);
+        setCategoryField('');
     }
 
     async function removeCategoryFromList(updatedCategoryId: string) {
         console.log('Removendo categoria ID:', updatedCategoryId);
-        try {
-            await remove(updatedCategoryId);
-            console.log('Categoria removida com sucesso');
-        } catch (err: any) {
-            console.error('Erro ao remover categoria:', err?.response?.data || err?.message || err);
-            throw err;
-        }
+        await remove(updatedCategoryId);
+        console.log('Categoria removida com sucesso');
     }
 
     async function editCategoryName(updatedCategory: ICategory) {
-        try {
-            await update(updatedCategory);
-        } catch (err: any) {
-            console.error('Erro ao editar categoria:', err);
-        }
+        await update(updatedCategory);
     }
 
     return (

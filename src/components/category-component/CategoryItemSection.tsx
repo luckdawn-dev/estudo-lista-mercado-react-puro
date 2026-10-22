@@ -9,8 +9,8 @@ type Props = {
 export function CategoryItemSection({ categoryId }: Props) {
   const { items: itemList, addItem, removeItem } = useCategoryItems(categoryId);
 
-  async function handleAddItem(itemName: string, quantity?: number) {
-    await addItem(itemName, quantity);
+  async function handleAddItem(itemName: string) {
+    await addItem(itemName);
   }
 
   return (
